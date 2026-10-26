@@ -1,0 +1,6 @@
+{
+  "name": "call-center-intelligence",
+  "version": "0.1.0",
+  "description": "Turn call recordings and transcripts into contact reasons, QA scores, escalation drivers and save/upsell signals with AI Functions, tied to OpEx and revenue.",
+  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+}

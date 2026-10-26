@@ -1,0 +1,6 @@
+{
+  "name": "spend-and-contract-leakage",
+  "version": "0.1.0",
+  "description": "Compare contract terms to POs and invoices to find off-contract spend, missed discounts and auto-renewals.",
+  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+}

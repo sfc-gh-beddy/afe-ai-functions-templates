@@ -1,0 +1,6 @@
+{
+  "name": "churn-signals",
+  "version": "0.1.0",
+  "description": "Find churn reasons and at-risk accounts in tickets, surveys and emails, joined to usage and ARR.",
+  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+}

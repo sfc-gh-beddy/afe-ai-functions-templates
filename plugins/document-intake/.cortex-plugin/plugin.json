@@ -1,0 +1,6 @@
+{
+  "name": "document-intake",
+  "version": "0.1.0",
+  "description": "Extract structured fields from invoices, contracts, claims and forms with an exceptions queue.",
+  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+}

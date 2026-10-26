@@ -1,0 +1,6 @@
+{
+  "name": "voice-of-customer",
+  "version": "0.1.0",
+  "description": "Mine reviews, social and survey text for themes, aspect sentiment and product/pricing signals.",
+  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+}

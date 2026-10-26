@@ -1,0 +1,6 @@
+{
+  "name": "asset-maintenance-notes",
+  "version": "0.1.0",
+  "description": "Find failure precursors and recurring issues in work orders and technician notes to defer capex and cut downtime.",
+  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+}

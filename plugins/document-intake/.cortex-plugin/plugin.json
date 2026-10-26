@@ -1,6 +1,6 @@
 {
   "name": "document-intake",
   "version": "0.1.0",
-  "description": "Extract structured fields from invoices, contracts, claims and forms with an exceptions queue.",
+  "description": "Guided build for an intelligent document intake pipeline over invoices, contracts, insurance claims and business forms already landed on a Snowflake stage. Routes each document by type with AI_CLASSIFY, reads it with AI_PARSE_DOCUMENT (OCR / layout) and AI_EXTRACT with per-field confidence scores, normalizes and validates fields against business rules and systems of record (vendor master, purchase orders, policies), and sends anything uncertain or rule-breaking to an exceptions queue for human review instead of letting it post silently. Ships a synthetic sandbox and a rendered PDF/scan test corpus with a labeled field answer key, and measures field-level exact and normalized accuracy, straight-through-processing rate with its false-STP rate, and credits per 1K pages. Ties the result to OpEx (manual keying and review labor) and working capital (cycle time, early-pay discount capture, late-payment avoidance) using customer-supplied inputs only.",
   "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
 }

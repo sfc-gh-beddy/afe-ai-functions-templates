@@ -1,6 +1,6 @@
 {
   "name": "call-center-intelligence",
   "version": "0.1.0",
-  "description": "Turn call recordings and transcripts into contact reasons, QA scores, escalation drivers and save/upsell signals with AI Functions, tied to OpEx and revenue.",
+  "description": "Guided build that turns contact-center call audio and transcripts already in Snowflake into contact reasons, agent QA scores against a customer-overridable rubric, escalation and repeat-contact drivers, and save/upsell signals. Transcribes audio with AI_TRANSCRIBE, redacts PII with AI_REDACT by default before any other model sees the text, classifies with AI_CLASSIFY, scores sentiment with AI_SENTIMENT, extracts retention and sales signals with AI_EXTRACT, and rolls up drivers with AI_SUMMARIZE_AGG. Ships a seeded sandbox with a labeled answer key, a synthetic audio corpus, a measured accuracy harness, an incremental pipeline with a semantic view and Cortex Agent, and a value readout tied to OpEx (handle time, QA cost, deflection) and revenue (saves, upsell) using customer-supplied inputs only.",
   "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
 }

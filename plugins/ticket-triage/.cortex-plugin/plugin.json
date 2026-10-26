@@ -1,6 +1,9 @@
 {
   "name": "ticket-triage",
+  "description": "Guided build for a support and IT ticket triage pipeline on tickets already in Snowflake. Classifies each ticket into category, priority and resolver queue with Cortex AI functions against a customer-owned taxonomy, extracts product, error and asset entities, links duplicates and known issues with embeddings, and identifies deflection candidates with suggested resolutions grounded in a Cortex Search knowledge base and cited back to source articles. Measures routing precision, recall and macro-F1 per queue, a priority confusion matrix and deflection precision against a labeled answer key, and produces a value readout for routing time, MTTR and deflection from customer-supplied unit economics.",
   "version": "0.1.0",
-  "description": "Auto-classify, prioritize and route support/IT tickets and find deflection candidates.",
-  "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
+  "author": {
+    "name": "Bracken Eddy",
+    "email": "bracken.eddy@snowflake.com"
+  }
 }

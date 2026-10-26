@@ -7,14 +7,14 @@ Cortex AI Functions, ties it to an OpEx / CapEx / revenue lever, and stands up a
 ## Play catalog
 | Play | Primary lever | Typical data | Status |
 |---|---|---|---|
-| call-center-intelligence | OpEx (handle time, QA cost, deflection), revenue (save/upsell) | call audio, transcripts | scaffold |
-| churn-signals | Revenue (retention) | tickets, survey verbatims, emails + usage | scaffold |
-| entity-resolution | OpEx (data ops, duplicate spend), revenue (cross-sell) | CRM/ERP/vendor masters | scaffold |
-| voice-of-customer | Revenue (product/pricing), OpEx (returns) | reviews, social, surveys | scaffold |
-| document-intake | OpEx (manual processing), working capital | invoices, contracts, claims, forms | scaffold |
-| ticket-triage | OpEx (routing, MTTR) | support / IT tickets | scaffold |
-| asset-maintenance-notes | CapEx (deferral), OpEx (downtime) | work orders, technician notes, inspections | scaffold |
-| spend-and-contract-leakage | OpEx (procurement), CapEx | contracts, POs, invoices | scaffold |
+| call-center-intelligence | OpEx (handle time, QA cost, deflection), revenue (save/upsell) | call audio, transcripts | built, untested |
+| churn-signals | Revenue (retention) | tickets, survey verbatims, emails + usage | built, untested |
+| entity-resolution | OpEx (data ops, duplicate spend), revenue (cross-sell) | CRM/ERP/vendor masters | built, untested |
+| voice-of-customer | Revenue (product/pricing), OpEx (returns) | reviews, social, surveys | built, untested |
+| document-intake | OpEx (manual processing), working capital | invoices, contracts, claims, forms | built, untested |
+| ticket-triage | OpEx (routing, MTTR) | support / IT tickets | built, untested |
+| asset-maintenance-notes | CapEx (deferral), OpEx (downtime) | work orders, technician notes, inspections | built, untested |
+| spend-and-contract-leakage | OpEx (procurement), CapEx | contracts, POs, invoices | built, untested |
 | icd10-code-extraction (HCLS) | Revenue (risk-adjustment recapture), care quality | clinical notes, charts | built: reference implementation |
 
 ## Every play follows the same lifecycle

@@ -1,6 +1,6 @@
 {
   "name": "asset-maintenance-notes",
   "version": "0.1.0",
-  "description": "Find failure precursors and recurring issues in work orders and technician notes to defer capex and cut downtime.",
+  "description": "Guided build that turns work orders, technician notes and inspection reports already in Snowflake into maintenance intelligence. Extracts component and failure mode against a pinned, customer-owned taxonomy with Cortex AI functions (AI_CLASSIFY, AI_COMPLETE structured output, AI_EXTRACT), clusters recurring issues with AI_EMBED, builds point-in-time failure-precursor signals per asset joined to the asset registry and sensor and maintenance history, and evaluates extraction precision/recall and precursor lead time on a labeled synthetic sandbox with leakage controls. Operationalizes as incremental dynamic tables, a semantic view and a Cortex Agent, and closes with a value readout tying repeat truck rolls and unplanned downtime (OpEx) and condition-based replacement deferral (CapEx) to customer-supplied inputs only.",
   "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
 }

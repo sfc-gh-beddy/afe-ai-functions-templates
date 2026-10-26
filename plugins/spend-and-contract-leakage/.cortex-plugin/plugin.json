@@ -1,6 +1,6 @@
 {
   "name": "spend-and-contract-leakage",
   "version": "0.1.0",
-  "description": "Compare contract terms to POs and invoices to find off-contract spend, missed discounts and auto-renewals.",
+  "description": "Guided build for a spend and contract leakage pipeline on contracts, purchase orders and invoices already in Snowflake. Parses contracts, amendments and order forms with AI_PARSE_DOCUMENT, extracts commercial terms (rate cards, volume tiers, escalators, renewal uplift caps, auto-renewal and notice windows, termination rights) with AI_EXTRACT and schema-constrained AI_COMPLETE, each term carrying cited clause evidence, then reconciles them deterministically in SQL against POs and invoice lines to surface off-contract spend, rate variance, missed volume discounts, renewal uplift overcharges, expired-contract spend and unnoticed auto-renewals with a dollar impact. Ships a synthetic sandbox and rendered test corpus with planted leakage and an answer key, a term-extraction and finding precision/recall harness with dollar-impact reconciliation, a semantic view and Cortex Agent, and a value readout tied to procurement OpEx and CapEx levers using customer-supplied inputs only.",
   "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
 }

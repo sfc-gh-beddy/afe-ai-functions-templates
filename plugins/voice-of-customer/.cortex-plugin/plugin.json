@@ -1,6 +1,6 @@
 {
   "name": "voice-of-customer",
   "version": "0.1.0",
-  "description": "Mine reviews, social and survey text for themes, aspect sentiment and product/pricing signals.",
+  "description": "Guided build for a voice-of-customer pipeline on reviews, social posts and survey open-ends already in Snowflake. Normalizes and deduplicates feedback, resolves language and links SKUs, classifies every item against a governed, versioned two-level taxonomy with AI_CLASSIFY, scores aspect-level sentiment with AI_SENTIMENT, detects emerging themes over time including themes the taxonomy does not yet contain, writes theme summaries by product, SKU, region and period with AI_SUMMARIZE_AGG and AI_AGG, and operationalizes the result as an incremental pipeline, semantic view and Cortex Agent. Ships a synthetic sandbox with a labeled answer key and planted emerging themes, measures topic and aspect-sentiment precision and recall and taxonomy drift handling, and produces a value readout for revenue (product, pricing, retention) and OpEx (returns, support) levers using customer-supplied inputs only.",
   "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
 }

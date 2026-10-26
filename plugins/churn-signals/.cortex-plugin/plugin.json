@@ -1,6 +1,6 @@
 {
   "name": "churn-signals",
   "version": "0.1.0",
-  "description": "Find churn reasons and at-risk accounts in tickets, surveys and emails, joined to usage and ARR.",
+  "description": "Guided build for a churn-signals pipeline on unstructured customer data already in Snowflake. Extracts churn reasons, aspect sentiment, churn intent, competitor mentions and verbatim-grounded evidence from support tickets, survey verbatims, emails and CSM call notes with Cortex AI functions (AI_CLASSIFY multi-label, AI_SENTIMENT, AI_COMPLETE structured output, AI_SUMMARIZE_AGG); joins them point-in-time to usage and ARR under a label-leakage audit; trains and registers a Snowflake ML churn model compared against a usage-only baseline; batch-scores open renewals in SQL into a ranked at-risk list with reasons and cited evidence; and reports churned ARR by reason, measured reason precision/recall, model AUC/lift/calibration, and credits per 1K interactions. Ships a deterministic synthetic sandbox with a labeled answer key and planted leakage traps. For B2B and subscription businesses protecting revenue retention.",
   "author": { "name": "Bracken Eddy", "email": "bracken.eddy@snowflake.com" }
 }

@@ -1,0 +1,5 @@
+{
+  "name": "icd10-code-extraction",
+  "description": "Guided build for an ICD-10 / HCC suspecting pipeline on unstructured clinical documents already in Snowflake. Routes documents by cost tier, extracts clinical evidence with Cortex AI functions, grounds coding decisions in a Cortex Search knowledge store, and emits scored suspect codes with cited evidence and measured accuracy. For healthcare payers and providers recovering uncoded risk-adjustment revenue and surfacing undetected disease progression.",
+  "version": "0.1.0"
+}

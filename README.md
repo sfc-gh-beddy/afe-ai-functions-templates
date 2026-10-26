@@ -15,6 +15,7 @@ Cortex AI Functions, ties it to an OpEx / CapEx / revenue lever, and stands up a
 | ticket-triage | OpEx (routing, MTTR) | support / IT tickets | scaffold |
 | asset-maintenance-notes | CapEx (deferral), OpEx (downtime) | work orders, technician notes, inspections | scaffold |
 | spend-and-contract-leakage | OpEx (procurement), CapEx | contracts, POs, invoices | scaffold |
+| icd10-code-extraction (HCLS) | Revenue (risk-adjustment recapture), care quality | clinical notes, charts | built: reference implementation |
 
 ## Every play follows the same lifecycle
 1. **Discover**: find candidate unstructured columns and stages; check privileges, region and cross-region settings.
@@ -23,6 +24,11 @@ Cortex AI Functions, ties it to an OpEx / CapEx / revenue lever, and stands up a
 4. **Quantify value**: map the signal to a P&L lever with customer-supplied unit economics (`shared/references/value-model.md`).
 5. **Operationalize**: incremental pipeline (stream -> task -> dynamic tables), semantic view, Cortex Agent for CoWork.
 6. **Readout**: one-page value narrative + POC success criteria.
+
+## Reference implementation
+`plugins/icd10-code-extraction` is the most complete play and the pattern the others should grow into:
+a router skill plus phase skills, a system-of-record preflight, best-practice guardrails, a resumable project state file,
+a seeded sandbox, a synthetic test corpus, measured accuracy, and a dbt-or-SQL materialization choice.
 
 ## Layout
 - `plugins/<play>/`: one CoCo plugin per play (`.cortex-plugin/plugin.json`, `skills/<play>/SKILL.md`).

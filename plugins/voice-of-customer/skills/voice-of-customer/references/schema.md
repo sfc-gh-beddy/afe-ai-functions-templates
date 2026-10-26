@@ -1,1 +1,3 @@
-# Extraction schema for voice-of-customer\n\nTODO
+# Extraction schema for voice-of-customer
+
+TODO

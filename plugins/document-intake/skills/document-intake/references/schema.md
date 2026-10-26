@@ -1,1 +1,3 @@
-# Extraction schema for document-intake\n\nTODO
+# Extraction schema for document-intake
+
+TODO

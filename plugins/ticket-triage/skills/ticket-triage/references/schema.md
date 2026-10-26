@@ -1,1 +1,3 @@
-# Extraction schema for ticket-triage\n\nTODO
+# Extraction schema for ticket-triage
+
+TODO

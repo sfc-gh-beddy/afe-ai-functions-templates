@@ -1,1 +1,3 @@
-# Extraction schema for asset-maintenance-notes\n\nTODO
+# Extraction schema for asset-maintenance-notes
+
+TODO

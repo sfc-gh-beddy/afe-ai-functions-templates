@@ -1,1 +1,3 @@
-# Extraction schema for spend-and-contract-leakage\n\nTODO
+# Extraction schema for spend-and-contract-leakage
+
+TODO

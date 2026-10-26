@@ -1,1 +1,3 @@
-# Extraction schema for entity-resolution\n\nTODO
+# Extraction schema for entity-resolution
+
+TODO

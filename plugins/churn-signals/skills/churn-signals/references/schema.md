@@ -1,1 +1,3 @@
-# Extraction schema for churn-signals\n\nTODO
+# Extraction schema for churn-signals
+
+TODO

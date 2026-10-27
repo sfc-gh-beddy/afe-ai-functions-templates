@@ -64,6 +64,7 @@ redaction:
   enabled: true
   categories: null                 # null = all supported categories
   chunk_target_tokens: 700         # input tokens per AI_REDACT call; see best-practices rule R2
+  context_max_chars: 60            # turns this short are re-redacted with the previous turn as context (Phase 2 step 4c-ctx)
   keep_raw_segments: false         # if true, raw table must have a deliberate grant decision
   # Present only when enabled is false:
   # opt_out_by: "name / role"

@@ -47,10 +47,13 @@ FROM TABLE(GENERATOR(ROWCOUNT => 24));
 
 CREATE OR REPLACE TABLE SYNTH_CUSTOMERS AS
 SELECT 'SYN-CUS-' || LPAD(SEQ4() + 1, 5, '0')                         AS customer_id,
-       ARRAY_CONSTRUCT('Synthia','Testa','Mocky','Faux','Sample','Demo',
-                       'Proxy','Dummy','Fictus','Placido','Nemo','Vera')[SEQ4() % 12]::VARCHAR  AS first_name,
-       ARRAY_CONSTRUCT('Testerson','Exampleton','Fakely','Placeholder','Synthwood',
-                       'Mockridge','Dataford','Sandbury','Nullman','Labelle')[SEQ4() % 10]::VARCHAR AS last_name,
+       -- Ordinary first and last names, combined arbitrarily, so every person is fabricated but the
+       -- name reads as a name. Obviously fake tokens ('Dummy Placeholder') are not recognized by
+       -- AI_REDACT and would inflate the measured NAME leak rate with sandbox artifacts.
+       ARRAY_CONSTRUCT('Maria','James','Priya','Daniel','Aisha','Kevin',
+                       'Laura','Marcus','Elena','Thomas','Grace','Omar')[SEQ4() % 12]::VARCHAR  AS first_name,
+       ARRAY_CONSTRUCT('Alvarez','Brennan','Choudhury','Dawson','Okafor',
+                       'Lindqvist','Moreau','Nakamura','Patterson','Reyes')[SEQ4() % 10]::VARCHAR AS last_name,
        ARRAY_CONSTRUCT('Basic','Standard','Premium')[SEQ4() % 3]::VARCHAR AS plan,
        1 + (SEQ4() * 7) % 60                                         AS tenure_months,
        ARRAY_CONSTRUCT(30, 55, 90)[SEQ4() % 3]::NUMBER               AS monthly_value_placeholder

@@ -276,6 +276,48 @@ Estimate first and gate: `SUM(AI_COUNT_TOKENS('ai_redact', chunk_text))` over a 
 a floor — billed AI_REDACT tokens include the generated text (documented), so the bill is roughly double
 the input estimate.
 
+### 4c-ctx. Re-redact short turns with the previous turn as context
+
+AI_REDACT sees one chunk at a time. A short answer such as `"July 05, 2004."` carries no cue that it is a
+date of birth; the cue (`"can you give me your date of birth?"`) is in the previous turn. Measured on the
+sandbox: per-turn redaction leaked 27 of 63 planted dates of birth; with the previous turn as context the
+leak was 0. Re-redact every turn of at most `redaction.context_max_chars` characters (default 60) with the
+previous turn prepended, then cut the current turn back out after a marker:
+
+```sql
+CREATE OR REPLACE TRANSIENT TABLE REDACT_CONTEXT_CHUNKS AS
+WITH r AS (
+    SELECT call_id, seq, text_raw,
+           LAG(text_raw) OVER (PARTITION BY call_id ORDER BY seq) AS prev_raw
+    FROM CALL_SEGMENTS_RAW
+    WHERE text_raw IS NOT NULL AND TRIM(text_raw) <> ''
+)
+SELECT call_id, seq, 'Previous turn: ' || prev_raw || '\n<<TURN>>\n' || text_raw AS context_text
+FROM r
+WHERE prev_raw IS NOT NULL AND LENGTH(text_raw) <= :context_max_chars;
+
+CREATE OR REPLACE TABLE REDACT_CONTEXT_RESULTS AS
+SELECT call_id, seq, r:error::STRING AS redaction_error,
+       IFF(CONTAINS(r:value::STRING, '<<TURN>>'),
+           TRIM(SPLIT_PART(r:value::STRING, '<<TURN>>', -1)), NULL) AS turn_redacted,
+       :run_id AS run_id, CURRENT_TIMESTAMP() AS redacted_at
+FROM (SELECT c.*, AI_REDACT(input => c.context_text, return_error_details => TRUE) AS r
+      FROM REDACT_CONTEXT_CHUNKS c);
+```
+
+A lost marker (`turn_redacted IS NULL`) means the result cannot be split safely; keep the per-turn result
+for that row and count it. After 4e assembles the table, apply the context result:
+
+```sql
+UPDATE CALL_SEGMENTS_REDACTED_STAGE s
+SET text_redacted = c.turn_redacted
+FROM REDACT_CONTEXT_RESULTS c
+WHERE c.call_id = s.call_id AND c.seq = s.seq
+  AND c.turn_redacted IS NOT NULL AND s.redaction_status = 'REDACTED';
+```
+
+Cost: on the sandbox, about 4,970 turns and 130K input tokens (roughly double billed) for 681 calls.
+
 ### 4d. Truncation guard
 
 Whether over-length output errors or truncates is not stated precisely. Flag any chunk whose output is much

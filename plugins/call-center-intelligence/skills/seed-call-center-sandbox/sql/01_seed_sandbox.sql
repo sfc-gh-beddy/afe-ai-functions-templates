@@ -10,7 +10,7 @@
 --   {{REPEAT_SHARE}}  share of unresolved calls that generate a follow-up, e.g. 0.6
 --   {{AUDIO_SHARE}}   share of calls with NO vendor transcript (audio-only), e.g. 0.25
 --   {{FULLTEXT_SHARE}} share of transcript calls delivered as one full-text blob, e.g. 0.10
---   {{START_DATE}}    first call date, e.g. '2026-09-01'
+--   {{START_DATE}}    first call date, e.g. 2026-09-01 (no quotes; the script quotes it)
 --   {{MIN_CALL_SECONDS}} must equal definitions.min_call_seconds, e.g. 20
 --
 -- SYNTH_SCENARIOS (turn templates + labels) is created in {{EVAL_SCHEMA}}:

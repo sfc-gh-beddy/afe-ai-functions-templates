@@ -73,6 +73,7 @@ redaction:
 # Business definitions. Settled with the customer, not defaulted silently.
 definitions:
   repeat_window_days: 7            # same customer, any reason, within N days
+  min_role_confidence: 0.7         # Phase 2 eligibility: model-assigned speaker roles below this are not role-eligible
   repeat_same_reason_only: false
   escalation_sources: [transfer_flag, supervisor_request]
   min_call_seconds: 20             # shorter calls are abandons; excluded and counted

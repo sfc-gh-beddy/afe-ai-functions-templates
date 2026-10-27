@@ -94,7 +94,7 @@ sandbox rows only. Never point it at a real transcript export; it writes text-de
    python3 scripts/render_call_audio.py \
      --manifest /tmp/cci_render_manifest.csv \
      --out-dir /tmp/cci_audio --only-audio-only \
-     --stage {{DB}}.{{SCHEMA}}.SYNTH_CALL_AUDIO --upload -c <connection>
+     --stage {{DB}}.{{SCHEMA}}.SYNTH_CALL_AUDIO --upload --connection <connection>
    ```
 
    Without `--upload` the script prints the `PUT` statements instead.

@@ -433,7 +433,7 @@ SELECT call_id,
        MIN(role_confidence)                                 AS min_role_confidence,
        unredacted_segments = 0                              AS text_eligible,
        unredacted_segments = 0 AND agent_segments > 0 AND customer_segments > 0
-         AND unknown_segments = 0 AND MIN(role_confidence) >= :min_role_confidence AS role_eligible
+         AND unknown_segments = 0 AND MIN(role_confidence) >= :min_role_confidence  -- definitions.min_role_confidence AS role_eligible
 FROM CALL_SEGMENTS_REDACTED
 GROUP BY call_id;
 ```

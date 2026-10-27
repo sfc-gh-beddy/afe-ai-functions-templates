@@ -404,10 +404,10 @@ incrementalizable, the build should fail rather than fall back.
 ### 33. Tokens, never currency
 
 Use `show_details => TRUE` for per-call usage and
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` for billed totals. Report tokens and
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` for billed totals. Report tokens and
 credits as recorded; do not look up prices or convert to currency.
 
-- That view carries `query_id`, `function_name`, `model_name`, `tokens`, `token_credits` -- and **no
+- That view carries `query_id`, `function_name`, `model_name`, `metrics` (token counts), `credits` -- and **no
   timestamp**. A filter on `start_time` against it does not compile. Join to
   `ACCOUNT_USAGE.QUERY_HISTORY` on `query_id`. Tag every AI step with the run id so a run's spend is selectable exactly,
   and expect the view to lag by hours. `ALTER SESSION SET QUERY_TAG = $run_id` fails (verified:

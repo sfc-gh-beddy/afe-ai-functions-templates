@@ -346,5 +346,5 @@ SELECT (SELECT COUNT(*) FROM MAINT_SOURCE_TEXT)                                 
 FROM MAINT_SIGNAL_RAW
 WHERE run_id = $run_id;
 -- Billed totals for every function (triage, embeddings, AI_AGG included) come
--- from SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY for the run
+-- from SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY for the run
 -- window; that view has ingestion latency, so reconcile later, not at the gate.

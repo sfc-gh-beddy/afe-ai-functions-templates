@@ -290,13 +290,22 @@ ORDER BY 2 DESC;
 --    substituting estimates silently.
 -- ---------------------------------------------------------------------
 WITH tagged AS (
-    SELECT q.query_id, SPLIT_PART(q.query_tag, ':', 3) AS phase
-    FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY q
-    WHERE q.query_tag LIKE 'er:{{RUN_ID}}:%'
+    SELECT DISTINCT q.query_id, SPLIT_PART(q.query_tag, ':', 3) AS phase
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY q
+    WHERE u.query_tag LIKE 'er:{{RUN_ID}}:%'
 ),
 usage AS (
     SELECT t.phase, u.function_name, u.model_name, SUM(u.tokens) AS tokens, SUM(u.token_credits) AS token_credits
-    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY u
+    FROM (
+    -- CORTEX_AI_FUNCTIONS_USAGE_HISTORY: one row per query, function, model and hourly window;
+    -- tokens live in the METRICS array, credits in CREDITS.
+    SELECT h.query_id, h.query_tag, h.function_name, h.model_name,
+           ANY_VALUE(h.credits) AS token_credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY h,
+         LATERAL FLATTEN(input => h.metrics, outer => TRUE) m
+    GROUP BY h.query_id, h.query_tag, h.start_time, h.function_name, h.model_name
+) u
     JOIN tagged t ON t.query_id = u.query_id
     GROUP BY 1, 2, 3
 ),

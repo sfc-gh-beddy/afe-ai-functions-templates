@@ -107,7 +107,7 @@ how many of each were true pairs. Every one of these is lost recall that would o
 ### 8. Cost (section 9)
 
 Billed tokens per phase, function and model, from
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` joined to `QUERY_HISTORY` on the
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` filtered on the
 `er:<run_id>:<phase>` query tag that the score and adjudicate SQL set — then normalized to **tokens per
 1,000 source records**. Section 9a gives the share of candidate pairs that reached the model and model
 calls per 1,000 records: that is the measured effect of blocking and banding as cost controls on this

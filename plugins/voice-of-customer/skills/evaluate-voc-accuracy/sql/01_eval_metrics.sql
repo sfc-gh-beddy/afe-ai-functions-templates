@@ -415,15 +415,22 @@ SELECT
       WHERE experiment_id = '{{EXPERIMENT_ID}}' AND was_segmented)                          AS segmented;
 
 -- ---------------------------------------------------------------------
--- 10. Cost per 1K items. The usage view has no timestamp: attribute via
---     QUERY_HISTORY on the run's QUERY_TAG ('voc:<run_id>'). Usage can lag
+-- 10. Cost per 1K items. Filter the usage view on the run's QUERY_TAG ('voc:<run_id>'). Usage can lag
 --     by a few hours. Tokens and credits only; never currency.
 -- ---------------------------------------------------------------------
 WITH usage AS (
     SELECT u.function_name, u.model_name, SUM(u.tokens) AS tokens, SUM(u.token_credits) AS credits
-    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY u
-    JOIN SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY q ON q.query_id = u.query_id
-    WHERE q.query_tag = 'voc:{{RUN_ID}}'
+    FROM (
+    -- CORTEX_AI_FUNCTIONS_USAGE_HISTORY: one row per query, function, model and hourly window;
+    -- tokens live in the METRICS array, credits in CREDITS.
+    SELECT h.query_id, h.query_tag, h.function_name, h.model_name,
+           ANY_VALUE(h.credits) AS token_credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY h,
+         LATERAL FLATTEN(input => h.metrics, outer => TRUE) m
+    GROUP BY h.query_id, h.query_tag, h.start_time, h.function_name, h.model_name
+) u
+    WHERE u.query_tag = 'voc:{{RUN_ID}}'
     GROUP BY 1, 2
 ),
 n AS (SELECT COUNT(*) AS source_items FROM {{PIPE}}.VOC_FEEDBACK_STG)

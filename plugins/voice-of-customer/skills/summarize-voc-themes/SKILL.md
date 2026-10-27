@@ -160,7 +160,7 @@ same eligibility rule is enough. Record `function_used` so readers know which th
 Summaries run once per eligible group per period, not per item, so they are cheap relative to
 classification. Estimate the input with `AI_COUNT_TOKENS('ai_complete', <model>, <concatenated
 group text>)` only as a rough floor; `AI_AGG` and `AI_SUMMARIZE_AGG` add their own prompting, and
-the billed figure must be read back from `CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` after the first run.
+the billed figure must be read back from `CORTEX_AI_FUNCTIONS_USAGE_HISTORY` after the first run.
 Say so rather than presenting the estimate as exact.
 
 ### Citation check

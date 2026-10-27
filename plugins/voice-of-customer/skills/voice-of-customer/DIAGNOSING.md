@@ -161,13 +161,21 @@ SELECT exclusion_reason, COUNT(*) AS rows
 FROM <voc_feedback_stg>
 GROUP BY 1 ORDER BY 2 DESC;
 
--- Billed usage by function for one run. The usage view has no timestamp or
--- query tag, so filter through QUERY_HISTORY on the run's QUERY_TAG.
+-- Billed usage by function for one run. The usage view carries QUERY_TAG,
+-- so filter on the run's tag directly.
 -- Usage can take a few hours to appear.
 SELECT u.function_name, u.model_name, SUM(u.tokens) AS tokens, SUM(u.token_credits) AS credits
-FROM snowflake.account_usage.cortex_functions_query_usage_history u
-JOIN snowflake.account_usage.query_history q ON q.query_id = u.query_id
-WHERE q.query_tag = 'voc:<run_id>'
+FROM (
+    -- CORTEX_AI_FUNCTIONS_USAGE_HISTORY: one row per query, function, model and hourly window;
+    -- tokens live in the METRICS array, credits in CREDITS.
+    SELECT h.query_id, h.query_tag, h.function_name, h.model_name,
+           ANY_VALUE(h.credits) AS token_credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY h,
+         LATERAL FLATTEN(input => h.metrics, outer => TRUE) m
+    GROUP BY h.query_id, h.query_tag, h.start_time, h.function_name, h.model_name
+) u
+WHERE u.query_tag = 'voc:<run_id>'
 GROUP BY 1, 2 ORDER BY 3 DESC;
 ```
 

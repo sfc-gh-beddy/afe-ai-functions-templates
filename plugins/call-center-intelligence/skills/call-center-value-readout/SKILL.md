@@ -171,7 +171,7 @@ Same sourcing rules for the conversion rate. This lever is typically the least c
 ## Snowflake cost, measured
 
 From Phase 6 section 10: tokens per 1,000 calls by stage, measured on this corpus, times monthly volume. Convert to
-credits using `TOKEN_CREDITS` ratios observed in `CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` for the same functions and
+credits using `CREDITS` ratios observed in `CORTEX_AI_FUNCTIONS_USAGE_HISTORY` for the same functions and
 models. Add warehouse credits for the pipeline from `WAREHOUSE_METERING_HISTORY` over the evaluation window if the
 warehouse was dedicated.
 

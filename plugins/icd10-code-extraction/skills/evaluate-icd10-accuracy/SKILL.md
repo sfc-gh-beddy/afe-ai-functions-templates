@@ -491,12 +491,20 @@ SELECT 'judge', COUNT(*), NULL, NULL, SUM(judge_tokens) FROM ICD10_SUSPECTS WHER
 
 ```sql
 -- Billed totals, which are the system of record. Reconcile against the above.
-SELECT function_name, model_name,
-       SUM(tokens)        AS tokens,
-       SUM(token_credits) AS credits
-FROM snowflake.account_usage.cortex_functions_query_usage_history
-WHERE start_time >= :run_start_time
-GROUP BY 1, 2 ORDER BY credits DESC;
+-- Set the run's tag first: ALTER SESSION SET QUERY_TAG = 'icd10:<run_id>';
+-- Rows are hourly windows per query, so collapse METRICS to one token count per row
+-- before summing, or credits double-count.
+WITH per_row AS (
+    SELECT u.query_id, u.start_time, u.function_name, u.model_name,
+           ANY_VALUE(u.credits) AS credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM snowflake.account_usage.cortex_ai_functions_usage_history u,
+         LATERAL FLATTEN(input => u.metrics, outer => TRUE) m
+    WHERE u.query_tag = :run_query_tag
+    GROUP BY 1, 2, 3, 4
+)
+SELECT function_name, model_name, SUM(tokens) AS tokens, SUM(credits) AS credits
+FROM per_row GROUP BY 1, 2 ORDER BY credits DESC;
 ```
 
 Reporting rules, and they are not negotiable:

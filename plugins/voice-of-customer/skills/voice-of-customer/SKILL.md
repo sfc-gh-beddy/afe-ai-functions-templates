@@ -172,7 +172,7 @@ the default model, so estimates for this play are unusually reliable. The cost l
 structural: dedup and spam gating before any AI call, two-level classification so each call carries
 a short category list, label descriptions and examples kept short because they bill on every row,
 and incremental processing so only new feedback is classified. Phase 8 reports actual billed tokens
-from `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` and cost per 1K items on this
+from `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` and cost per 1K items on this
 corpus. Do not quote figures from elsewhere as this account's numbers.
 
 ## Teardown

@@ -193,7 +193,7 @@ recall figure.
 ## 10. Cost per 1K items
 
 Section 10 attributes billed tokens and credits to the run through `QUERY_HISTORY` on the query tag,
-because `CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` has no timestamp or tag of its own. Usage can take a
+because `CORTEX_AI_FUNCTIONS_USAGE_HISTORY` is bucketed by hour, so filter on the run's `QUERY_TAG`. Usage can take a
 few hours to appear; if the totals look low right after a run, wait and re-run before reporting.
 
 Report per function and per model:

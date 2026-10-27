@@ -190,7 +190,16 @@ FROM CALLS_IN_SCOPE WHERE source_route NOT LIKE 'EXCLUDED%';
 ```sql
 SELECT l.stage, u.function_name, u.model_name, SUM(u.tokens) AS tokens
 FROM RUN_QUERY_LOG l
-JOIN SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY u ON u.query_id = l.query_id
+JOIN (
+    -- CORTEX_AI_FUNCTIONS_USAGE_HISTORY: one row per query, function, model and hourly window;
+    -- tokens live in the METRICS array, credits in CREDITS.
+    SELECT h.query_id, h.query_tag, h.function_name, h.model_name,
+           ANY_VALUE(h.credits) AS token_credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY h,
+         LATERAL FLATTEN(input => h.metrics, outer => TRUE) m
+    GROUP BY h.query_id, h.query_tag, h.start_time, h.function_name, h.model_name
+) u ON u.query_id = l.query_id
 WHERE l.run_id = :run_id
 GROUP BY 1, 2, 3 ORDER BY tokens DESC;
 ```

@@ -15,7 +15,7 @@ from `shared/references/value-model.md` and are not negotiable:
 - **Mark every assumption** — who supplied it, and whether it is a measured figure or an estimate.
 - **Ranges, not points**: low / expected / high, driven by the customer's own range on each input and
   by the measured precision range from evaluation.
-- **Cost in tokens and credits as measured.** Report billed tokens and `TOKEN_CREDITS` from account
+- **Cost in tokens and credits as measured.** Report billed tokens and `CREDITS` from account
   usage; the customer applies their own credit price. Do not convert to currency.
 
 ## Step 1 — data-derived counts from the published run
@@ -101,7 +101,7 @@ Notes on each:
 ## Step 3 — Snowflake cost
 
 From `evaluate-match-accuracy` section 9: tokens per 1,000 source records, by phase, function and
-model, and `TOKEN_CREDITS` from `CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` for the measured runs. Project
+model, and `CREDITS` from `CORTEX_AI_FUNCTIONS_USAGE_HISTORY` for the measured runs. Project
 steady state from **change volume**, not total volume, because embeddings and model calls are
 incremental (publish skill): ask the customer for new and changed master records per month per entity
 type, and multiply by the measured per-record figures for embedding, and by the measured

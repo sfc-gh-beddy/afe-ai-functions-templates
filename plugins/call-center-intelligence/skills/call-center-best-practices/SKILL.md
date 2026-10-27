@@ -469,9 +469,8 @@ the spoken-word form separately. Report by category and by form.
 ### M6. Tokens, not dollars; reconcile against account usage
 
 Per-call tokens come from `show_details` on AI_COMPLETE, from duration for AI_TRANSCRIBE, and from
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` as the system of record for billed totals. That view
-has `QUERY_ID`, `FUNCTION_NAME`, `MODEL_NAME`, `TOKENS`, `TOKEN_CREDITS` and `WAREHOUSE_ID` but **no timestamp
-column**, so a filter like `WHERE start_time >= :run_start` does not exist on it. Record `LAST_QUERY_ID()` into a
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` as the system of record for billed totals. That view
+has `QUERY_ID`, `FUNCTION_NAME`, `MODEL_NAME`, `METRICS` (token counts), `CREDITS` and `WAREHOUSE_ID`, and its `START_TIME` is an hourly aggregation window, so a time filter cannot isolate one run. Record `LAST_QUERY_ID()` into a
 `RUN_QUERY_LOG` table after every model-calling statement and join on `query_id`. Account usage has latency; a
 missing row means "not yet", not zero.
 `AI_COUNT_TOKENS` estimates input only; for AI_REDACT the billed total also includes the generated text, and

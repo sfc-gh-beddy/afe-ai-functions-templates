@@ -325,8 +325,8 @@ holdout halves, calibrate on one, report on the other.
 ### 32. Instrument real usage
 
 Use `show_details => TRUE` on adjudication to capture per-call `usage`, and reconcile run totals with
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` (columns include `FUNCTION_NAME`,
-`MODEL_NAME`, `QUERY_ID`, `TOKENS`, `TOKEN_CREDITS`). Report tokens and call counts; never convert to
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` (columns include `FUNCTION_NAME`,
+`MODEL_NAME`, `QUERY_ID`, `METRICS` (token counts), `CREDITS`). Report tokens and call counts; never convert to
 dollars. `AI_COUNT_TOKENS` takes the function name first, lowercase: `('ai_embed', model, text)` or
 `('ai_complete', model, text)`. It estimates input only, and structured-output schema overhead is billed
 as input but may not be counted by the estimate — reconcile after the first real run.

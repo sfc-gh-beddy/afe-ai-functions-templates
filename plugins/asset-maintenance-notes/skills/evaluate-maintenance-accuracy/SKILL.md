@@ -144,16 +144,24 @@ From `MAINT_SIGNAL_RAW` usage on the run:
 - **extraction tokens per 1,000 source records** -- the number for the POC criteria.
 
 Triage (`AI_CLASSIFY`), embeddings and `AI_AGG` do not return usage inline. Take them from
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` for the run window once the view has
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` for the run window once the view has
 caught up (it lags), and add them to the per-1K figure in the readout:
 
 ```sql
--- The usage view has no timestamp column; attribute by query id. The extraction script
+-- Attribute by query tag. The extraction script
 -- sets QUERY_TAG to the run_id, which makes the run's queries selectable exactly.
 SELECT u.function_name, u.model_name, SUM(u.tokens) AS tokens, SUM(u.token_credits) AS credits
-FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY u
-JOIN SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY q ON q.query_id = u.query_id
-WHERE q.query_tag = :run_id
+FROM (
+    -- CORTEX_AI_FUNCTIONS_USAGE_HISTORY: one row per query, function, model and hourly window;
+    -- tokens live in the METRICS array, credits in CREDITS.
+    SELECT h.query_id, h.query_tag, h.function_name, h.model_name,
+           ANY_VALUE(h.credits) AS token_credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY h,
+         LATERAL FLATTEN(input => h.metrics, outer => TRUE) m
+    GROUP BY h.query_id, h.query_tag, h.start_time, h.function_name, h.model_name
+) u
+WHERE u.query_tag = :run_id
 GROUP BY 1, 2 ORDER BY 3 DESC;
 ```
 

@@ -206,7 +206,7 @@ schema constrains generation token by token so the response cannot come back unp
 
 Note that `AI_COUNT_TOKENS` **underestimates** structured-output calls on Claude models: the schema
 generates additional request content that is billed but not counted. Reconcile against
-`cortex_functions_query_usage_history` after the first real run rather than trusting the estimate.
+`cortex_ai_functions_usage_history` after the first real run rather than trusting the estimate.
 
 ## Score, then land the output
 

@@ -341,12 +341,11 @@ object, so the estimate includes descriptions and examples; estimate with the ac
 with the text alone. `AI_COUNT_TOKENS('ai_sentiment', text)` is exact for the default model. The
 function name is lowercase and starts with `ai_`. Report tokens, call input-only figures a floor where
 output also bills, and reconcile against
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` after the first real run. Never convert
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` after the first real run. Never convert
 to currency.
 
-That view carries `QUERY_ID`, `FUNCTION_NAME`, `MODEL_NAME`, `TOKENS`, `TOKEN_CREDITS` and
-`WAREHOUSE_ID`, and **no timestamp** [verified in docs]. A filter on a start time against it does not
-exist; attribute usage to a run by setting `ALTER SESSION SET QUERY_TAG = 'voc:<run_id>'` before the
+That view carries `QUERY_ID`, `FUNCTION_NAME`, `MODEL_NAME`, `METRICS` (token counts), `CREDITS` and
+`WAREHOUSE_ID`, `QUERY_TAG`; its `START_TIME` is an hourly window [verified in docs], so a start-time filter cannot isolate a run; attribute usage to a run by setting `ALTER SESSION SET QUERY_TAG = 'voc:<run_id>'` before the
 run and joining to `ACCOUNT_USAGE.QUERY_HISTORY` on `query_id`. Usage can take a few hours to appear,
 so a cost readout run immediately after the pipeline under-reports.
 

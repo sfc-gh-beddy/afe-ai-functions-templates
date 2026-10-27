@@ -180,13 +180,21 @@ FROM suspect_raw;
 For **billed** totals across a run, prefer the account view, which is the system of record:
 
 ```sql
-SELECT function_name, model_name,
-       SUM(token_credits)  AS credits,
-       SUM(tokens)         AS tokens
-FROM snowflake.account_usage.cortex_functions_query_usage_history
-WHERE start_time >= :run_start
-GROUP BY 1, 2;
+-- Tag each run first: ALTER SESSION SET QUERY_TAG = 'icd10:<run_id>';
+WITH per_row AS (
+    SELECT u.query_id, u.start_time, u.function_name, u.model_name,
+           ANY_VALUE(u.credits) AS credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM snowflake.account_usage.cortex_ai_functions_usage_history u,
+         LATERAL FLATTEN(input => u.metrics, outer => TRUE) m
+    WHERE u.query_tag = :run_query_tag
+    GROUP BY 1, 2, 3, 4
+)
+SELECT function_name, model_name, SUM(credits) AS credits, SUM(tokens) AS tokens
+FROM per_row GROUP BY 1, 2;
 ```
+
+Do not use `cortex_functions_query_usage_history`: it has no timestamp column and is no longer updated.
 
 Persist per-stage figures. Rules:
 
@@ -202,7 +210,7 @@ Persist per-stage figures. Rules:
   `AI_COUNT_TOKENS`. Verified: the same text estimates identically with and without a schema
   attached, while the billed figure is higher. Since this plugin recommends structured output on the
   coder and judge stages, say so when presenting an estimate rather than letting the user discover
-  it on the bill. Reconcile against `cortex_functions_query_usage_history` after the first real run.
+  it on the bill. Reconcile against `cortex_ai_functions_usage_history` after the first real run.
 - Accuracy by model family: Claude and Gemini are estimates within roughly 3 percent, OpenAI is
   near-exact, everything else is exact.
 - Estimate before any batch run over a table column, and let the user choose to proceed, sample, or

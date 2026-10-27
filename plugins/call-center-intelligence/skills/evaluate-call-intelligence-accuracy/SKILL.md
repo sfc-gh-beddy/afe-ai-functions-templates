@@ -1,6 +1,6 @@
 ---
 name: evaluate-call-intelligence-accuracy
-description: "Phase 6 of the call-center-intelligence build. Measures whether the pipeline is right and what it costs, against the sandbox answer key and any customer-labeled sample, always joining from ground truth so failed transcriptions and redactions count as misses. Reports redaction leak rate on planted PII by category and by form (digits versus spoken words) across the redacted transcript and every model-written column; speaker-role accuracy; transcription character error rate by audio condition; contact-reason accuracy, macro and micro F1, per-label precision and recall and a confusion matrix; repeat, escalation-source and resolution accuracy; sentiment agreement; QA agreement per criterion (exact, within-one, MAE, applicability agreement) and calibration against human QA scores; save and upsell precision and recall including distractors; parse-failure and rejection accounting; and tokens per 1,000 calls from recorded query ids joined to CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY. Compares experiments and sets regression thresholds."
+description: "Phase 6 of the call-center-intelligence build. Measures whether the pipeline is right and what it costs, against the sandbox answer key and any customer-labeled sample, always joining from ground truth so failed transcriptions and redactions count as misses. Reports redaction leak rate on planted PII by category and by form (digits versus spoken words) across the redacted transcript and every model-written column; speaker-role accuracy; transcription character error rate by audio condition; contact-reason accuracy, macro and micro F1, per-label precision and recall and a confusion matrix; repeat, escalation-source and resolution accuracy; sentiment agreement; QA agreement per criterion (exact, within-one, MAE, applicability agreement) and calibration against human QA scores; save and upsell precision and recall including distractors; parse-failure and rejection accounting; and tokens per 1,000 calls from recorded query ids joined to CORTEX_AI_FUNCTIONS_USAGE_HISTORY. Compares experiments and sets regression thresholds."
 parent_skill: call-center-intelligence
 ---
 
@@ -398,8 +398,8 @@ Present this as one table. Every non-zero number is a share of calls whose outpu
 
 ## 10. Cost — tokens per 1,000 calls
 
-`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` carries `QUERY_ID`, `FUNCTION_NAME`, `MODEL_NAME`,
-`TOKENS`, `TOKEN_CREDITS` and `WAREHOUSE_ID`, but **no timestamp column**. Attribute cost through query ids.
+`SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` carries `QUERY_ID`, `FUNCTION_NAME`, `MODEL_NAME`,
+`METRICS` (token counts), `CREDITS` and `QUERY_TAG` and `WAREHOUSE_ID`; its `START_TIME` is an hourly window, so attribute cost through query ids.
 Every phase should record the query id of each batch statement right after it runs:
 
 ```sql
@@ -416,7 +416,16 @@ SELECT l.stage, u.function_name, u.model_name,
        SUM(u.tokens)        AS tokens,
        SUM(u.token_credits) AS token_credits
 FROM RUN_QUERY_LOG l
-JOIN SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY u ON u.query_id = l.query_id
+JOIN (
+    -- CORTEX_AI_FUNCTIONS_USAGE_HISTORY: one row per query, function, model and hourly window;
+    -- tokens live in the METRICS array, credits in CREDITS.
+    SELECT h.query_id, h.query_tag, h.function_name, h.model_name,
+           ANY_VALUE(h.credits) AS token_credits,
+           SUM(IFF(m.value:key:unit::STRING = 'tokens', m.value:value::NUMBER, 0)) AS tokens
+    FROM SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY h,
+         LATERAL FLATTEN(input => h.metrics, outer => TRUE) m
+    GROUP BY h.query_id, h.query_tag, h.start_time, h.function_name, h.model_name
+) u ON u.query_id = l.query_id
 WHERE l.run_id = :run_id
 GROUP BY 1, 2, 3 ORDER BY tokens DESC;
 ```

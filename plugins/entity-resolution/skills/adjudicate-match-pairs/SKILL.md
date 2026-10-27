@@ -154,7 +154,7 @@ From section 5:
 - outcome, decision and relationship distribution with average confidence
 - position-bias flip rate
 - real prompt and completion tokens from `show_details`; reconcile with
-  `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_FUNCTIONS_QUERY_USAGE_HISTORY` later (account usage views are not
+  `SNOWFLAKE.ACCOUNT_USAGE.CORTEX_AI_FUNCTIONS_USAGE_HISTORY` later (account usage views are not
   real-time)
 - ten decisions with reasons, read in the session — not summarized
 

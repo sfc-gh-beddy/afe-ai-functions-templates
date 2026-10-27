@@ -21,7 +21,7 @@
 
 USE SCHEMA {{DB}}.{{SCHEMA}};
 
--- Attribute every AI call in this run (usage view has no timestamp; join on query_id).
+-- Attribute every AI call in this run (the usage view carries QUERY_TAG).
 -- ALTER SESSION does not resolve $variables, so set the tag from a scripting block.
 EXECUTE IMMEDIATE $$
 BEGIN

@@ -285,11 +285,14 @@ shorter than its input:
 SELECT COUNT(*) AS suspicious_short
 FROM REDACT_RESULTS
 WHERE run_id = :run_id AND redacted_text IS NOT NULL
-  AND output_chars < input_chars * 0.6;
+  AND output_chars < input_chars * 0.6
+  AND NOT REGEXP_LIKE(redacted_text, '.*\\[[A-Z_]+\\].*', 's');
 ```
 
-Placeholders like `[PAYMENT_CARD_DATA]` are usually longer than the value they replace, so a real redaction
-rarely shortens a chunk by 40 percent. Inspect any hits (redacted text only) and re-chunk smaller.
+A turn that is mostly PII legitimately shrinks: a spelled-out email or a bare name becomes `[EMAIL].` or
+`[NAME].`, often under half the length. On the sandbox about 5 percent of chunks shrink that way, so the
+guard only flags short outputs that contain **no** placeholder. Inspect any hits (redacted text only) and
+re-chunk smaller.
 
 ### 4e. Assemble `CALL_SEGMENTS_REDACTED` (pre-role)
 
